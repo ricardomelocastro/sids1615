@@ -12,14 +12,22 @@ public class Message implements Serializable {
 	public int value;
 	public String id;
 	public ArrayList<dbLine> rs = new ArrayList<dbLine>();
+	String senderIp;
 	
 	public Message(int v, String s){
 		this.value = v;
 		this.id = s;
+		this.senderIp = "NULL";
 		
 	}
 	
 	public ArrayList<dbLine> getRs(){
 		return this.rs;
 	}
+	
+	public void addSenderIp(String Ip){
+		this.senderIp = Ip;
+	}
+	
+	
 }
