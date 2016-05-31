@@ -8,9 +8,9 @@ import db.Db;
 
 public class ServerSide {
 	
-	Db db;
-	String ip;
-	int tcpPort;
+	private Db db;
+	private String ip;
+	private int tcpPort;
 	
 	public ServerSide(int tcpPort){
 
@@ -20,18 +20,28 @@ public class ServerSide {
 	 public void go() { 
 		 System.out.println("Starting Server");
 		 
-		 Db db = new Db();
+		 this.db = new Db();
 		 db.startDb();
 		 
+		 System.out.println(db.getLastRecordDate());
+		 
+		 String ip;
+		 
 		 try {
-			this.ip = InetAddress.getLocalHost().getHostAddress();
+			ip = InetAddress.getLocalHost().getHostAddress();
+			System.out.println(ip);
+			this.ip = ip;
 			System.out.println(this.ip);
+			 System.out.println("IP");
+			 
+			 TCPServer tcpServer = new TCPServer(this.db, this.ip,this.tcpPort);
+			 tcpServer.start();
+			 
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 		 
-		 TCPServer tcpServer = new TCPServer(this.db, this.ip,this.tcpPort);
-		 tcpServer.start();
+		 
 		 
 		 
 	 }

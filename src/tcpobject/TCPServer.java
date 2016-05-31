@@ -9,11 +9,11 @@ import utils.Message;
 
 public class TCPServer extends Thread{
 	
-	Db db;
-	int tcpPort;
-	String localIp;
+	private Db db;
+	private int tcpPort;
+	private String localIp;
 	
-	public TCPServer(Db db, String localIP, int tcpPort){
+	public TCPServer(Db db, String localIp, int tcpPort){
 		this.db = db;
 		this.tcpPort = tcpPort;
 		this.localIp = localIp;
@@ -21,8 +21,8 @@ public class TCPServer extends Thread{
 	
 	public void run(){
 		
-		
-		tcpHandler th= new tcpHandler(db, localIp);
+		System.out.println(this.localIp);
+		tcpHandler th= new tcpHandler(this.db, this.localIp);
 		th.start();
 		
 		try {  

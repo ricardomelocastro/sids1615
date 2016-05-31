@@ -171,7 +171,7 @@ public ArrayList<dbLine> getRecordsByDate(String date){
 
       stmt = c.createStatement();
    
-      ResultSet rs = stmt.executeQuery( "SELECT * FROM USER WHERE updatedate > '"+date+"';" );
+      ResultSet rs = stmt.executeQuery( "SELECT * FROM USER WHERE updatetime > '"+date+"';" );
       int i = 0;
       while(rs.next()){
     	  int rowid = rs.getInt("ROWID");

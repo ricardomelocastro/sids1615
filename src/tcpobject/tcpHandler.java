@@ -45,11 +45,12 @@ public class tcpHandler extends Thread {
 					ArrayList<dbLine> records = db.getRecordsByDate(m.id);
 					
 					Message reply = new Message(1,"save");
-					reply.addReceiverIp(m.getSenderIp());
+					reply.addReceiverIp("192.168.1.68");
 					reply.addSenderIp(this.localIp);
 					m.addDb(records);
 					TcpSend ts = new TcpSend(reply);
 					ts.start();
+					System.out.println("RECORDS SENT");
 				}
 				
 				
