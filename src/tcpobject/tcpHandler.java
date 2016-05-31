@@ -9,10 +9,13 @@ import protocols.*;
 
 public class tcpHandler extends Thread {
 	private Db db;
+	private String localIp;
+	
 	private volatile Queue<Message> waitList= new LinkedList <Message>();
 	
-	public tcpHandler(Db db){
+	public tcpHandler(Db db, String localIp){
 		this.db =db;
+		this.localIp = localIp;
 	}
 	
 	public void addMessage(Message m){
@@ -33,8 +36,22 @@ public class tcpHandler extends Thread {
 					new saveDbProtocol(m, db).start();
 				}
 				if(m.value==2){
-					
+					String last = db.getLastRecordDate();
+					Message reply = new Message(3,last);
+					TcpSend ts = new TcpSend(reply);
+					ts.start();
 				}
+				if(m.value==3){
+					ArrayList<dbLine> records = db.getRecordsByDate(m.id);
+					
+					Message reply = new Message(1,"save");
+					reply.addReceiverIp(m.getSenderIp());
+					reply.addSenderIp(this.localIp);
+					m.addDb(records);
+					TcpSend ts = new TcpSend(reply);
+					ts.start();
+				}
+				
 				
 			}
 			

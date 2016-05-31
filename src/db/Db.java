@@ -1,6 +1,9 @@
 package db;
 import java.io.File;
 import java.sql.*;
+import java.util.ArrayList;
+
+import utils.dbLine;
 
 
 public class Db {
@@ -124,7 +127,7 @@ public class Db {
 		return value;
 	}
 	
-	public String getLastRecord(){
+	public String getLastRecordDate(){
 		
 		String result = "null";
 		
@@ -150,6 +153,47 @@ public class Db {
 	      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 	      System.exit(0);
 	    }
+		
+		return result;
+	}
+	
+public ArrayList<dbLine> getRecordsByDate(String date){
+	
+	ArrayList<dbLine> result = new ArrayList<dbLine>();
+		
+	Connection c = null;
+    Statement stmt = null;
+    try {
+      Class.forName("org.sqlite.JDBC");
+      c = DriverManager.getConnection("jdbc:sqlite:risk.db");
+      c.setAutoCommit(false);
+      System.out.println("Opened database successfully");
+
+      stmt = c.createStatement();
+   
+      ResultSet rs = stmt.executeQuery( "SELECT * FROM USER WHERE updatedate > '"+date+"';" );
+      int i = 0;
+      while(rs.next()){
+    	  int rowid = rs.getInt("ROWID");
+    	  String user = rs.getString("USERNAME");
+    	  String user2 = rs.getString("USERNAMELOWER");
+    	  String email = rs.getString("EMAIL");
+    	  String password = rs.getString("Password");
+    	  String updatetime = rs.getString("updatetime");
+    	  
+    	  dbLine dbl = new dbLine(rowid,user,user2,email,password,updatetime);
+    	  result.add(dbl);
+    	  ++i;
+      }
+      System.out.println("FOUND "+i+" results.");
+      
+      rs.close();
+      stmt.close();
+      c.close();
+    } catch ( Exception e ) {
+      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+      System.exit(0);
+    }
 		
 		return result;
 	}

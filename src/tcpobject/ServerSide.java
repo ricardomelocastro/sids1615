@@ -1,55 +1,38 @@
 package tcpobject;
 
-import java.io.ObjectInputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import db.Db;
-import utils.Message;
+
 
 public class ServerSide {
 	
 	Db db;
-	public ServerSide(){
-		db = new Db();
-		db.startDb();
+	String ip;
+	int tcpPort;
+	
+	public ServerSide(int tcpPort){
+
+		this.tcpPort = tcpPort;
 	}
 		
-		
-	 public static void main(String args[]) { 
+	 public void go() { 
+		 System.out.println("Starting Server");
 		 
 		 Db db = new Db();
 		 db.startDb();
 		 
-		  int port = 2002;
-		  tcpHandler th= new tcpHandler(db);
-		  th.start();
-		  try {  
-		    ServerSocket ss = new ServerSocket(port); 
-		    Socket s; 
-		    java.io.InputStream is;
-		    ObjectInputStream ois;
-		    
-		    boolean running = true;
-		    while(running){
-		    	s = ss.accept();
-		    	is = s.getInputStream();
-			    ois = new ObjectInputStream(is);
-			    Message to = (Message)ois.readObject();
-			    String ipsender = s.getRemoteSocketAddress().toString();
-			    ipsender = ipsender.replace("/", "").split(":")[0];
-			    
-			    System.out.println(ipsender);
-			    th.addMessage(to);
-			    
-			    ois.close();
-			    s.close();  
-			    
-		    } 
-		    
-		    ss.close();  
-		}catch(Exception e){
-			System.out.println(e);
-			e.printStackTrace();}  
+		 try {
+			this.ip = InetAddress.getLocalHost().getHostAddress();
+			System.out.println(this.ip);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		}
+		 
+		 TCPServer tcpServer = new TCPServer(this.db, this.ip,this.tcpPort);
+		 tcpServer.start();
+		 
+		 
+	 }
 }
