@@ -25,7 +25,6 @@ public class tcpHandler extends Thread {
 	
 	public void run() {
 		
-		System.out.println("tcpHandler running");
 		boolean running = true;
 		while(running){
 			
@@ -45,7 +44,8 @@ public class tcpHandler extends Thread {
 					ArrayList<dbLine> records = db.getRecordsByDate(m.id);
 					
 					Message reply = new Message(1,"save");
-					reply.addReceiverIp("192.168.1.68");
+					reply.addReceiverIp(m.getSenderIp());
+					System.out.println("sender"+m.getSenderIp());
 					reply.addSenderIp(this.localIp);
 					m.addDb(records);
 					TcpSend ts = new TcpSend(reply);

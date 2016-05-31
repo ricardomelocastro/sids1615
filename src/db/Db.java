@@ -181,6 +181,8 @@ public ArrayList<dbLine> getRecordsByDate(String date){
     	  String password = rs.getString("Password");
     	  String updatetime = rs.getString("updatetime");
     	  
+    	  System.out.println(user);
+    	  
     	  dbLine dbl = new dbLine(rowid,user,user2,email,password,updatetime);
     	  result.add(dbl);
     	  ++i;
